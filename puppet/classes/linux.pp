@@ -32,64 +32,8 @@ class linux {
 		# Run apt-get update when anything beneath /etc/apt/ changes
 		exec { "apt-get update":
     			command => "/usr/bin/apt-get update && touch $aptversionfile",
-    			# onlyif => "/bin/sh -c '[ ! -f /var/cache/apt/pkgcache.bin ] || /usr/bin/find /etc/apt/* -cnewer /var/cache/apt/pkgcache.bin | /bin/grep . > /dev/null'",
 		}
-	#	exec { "apt-update":
-	#		path => "$execpath",
-	#		user => root,
-	#		command => "apt-get update && touch $aptversionfile",
-		#}
 
-		#exec { "apt-update-add-sources":
-		#	path => "$execpath",
-		#	user => root,
-		#	command => "echo deb http://archive.canonical.com/ubuntu lucid partner >> /etc/apt/sources.list",
-		#	onlyif => "[ \"`/bin/grep \"^deb http://archive.canonical.com/ubuntu lucid partner\" /etc/apt/sources.list`\" = \"\" ]",
-		#}
-
-		#exec { "apt-update-add-backport-source":
-		#	path => "$execpath",
-		#	user => root,
-		#	command => "echo deb http://us.archive.ubuntu.com/ubuntu/ lucid-backports main restricted universe multiverse >> /etc/apt/sources.list",
-		#	onlyif => "[ \"`/bin/grep \"^deb http://us.archive.ubuntu.com/ubuntu/ lucid-backports main restricted universe multiverse\" /etc/apt/sources.list`\" = \"\" ]",
-		#	require => Exec["apt-update-add-sources"],
-		#}
-
-		#if $include_mysql == "true" {
-		#	$percona_repo_file = "$puppetdir/percona.version"
-
-		#	#############################
-		#	# Add Percona repositories
-		#	#############################
-		#	exec { "apt-key":
-		#		path => "$execpath",
-		#		command => "gpg --keyserver  hkp://keys.gnupg.net --recv-keys 1C4CBDCDCD2EFD2A \
-		#								&& gpg -a --export CD2EFD2A | apt-key add - && touch $percona_repo_file",
-		#		user => root,
-		#		timeout => "-1",
-		#		creates => "$percona_repo_file",
-		#	}
-
-		#	exec { "apt-repo":
-		#		path => "$execpath",
-		#		user => root,
-		#		command => "echo 'deb http://repo.percona.com/apt lucid main' >> /etc/apt/sources.list \
-		#								&& echo 'deb-src http://repo.percona.com/apt lucid main' >> /etc/apt/sources.list",
-		#		onlyif => "[ \"`/bin/grep \"^deb http://repo.percona.com/apt lucid main\" /etc/apt/sources.list`\" = \"\" ]",
-		#		require => Exec["apt-key"],
-		#	}
-
-		#	$percona_apt_update = "$puppetdir/perconaapt.version"
-		#	exec { "apt-update-percona":
-		#		path => "$execpath",
-		#		user => root,
-		#		command => "apt-get update \
-		#								&& touch $percona_apt_update",
-		#		require => Exec["apt-repo"],
-		#		creates => "$percona_apt_update",
-		#	}
-		#}
-		# Set ROOTPATH environment variable
 		exec { "env-rootpath":
 			path => "$execpath",
 			user => root,
@@ -122,9 +66,4 @@ class linux {
 			ensure => present,
 			require => Exec["apt-get update"],
 		}
-
-		#package { "sshpass":
-		#	ensure => present,
-		#	require => Exec["apt-get update"],
-		#}
 }
