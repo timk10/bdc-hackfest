@@ -12,7 +12,7 @@ class mysql {
 	
     exec { "mysqladduser":
 		path => "$execpath",
-    	command => "/vagrant/createdb.sh testdb testuser password",
+    	command => "/vagrant/puppet/createdb.sh testdb testuser password",
 		require => [Package["mysql-server"], Package["mysql-client"]],
         creates => "$mysqluser",
         user => root,
